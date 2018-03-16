@@ -8,7 +8,7 @@ R_API void r_anal_rtti_print_at_vtable(RAnal *anal, ut64 addr, int mode) {
 	if (context.abi == R_ANAL_CPP_ABI_MSVC) {
 		r_anal_rtti_msvc_print_at_vtable (&context, addr, mode);
 	} else {
-		r_anal_rtti_gcc_print_at_vtable (&context, addr, mode);
+		r_anal_rtti_itanium_print_at_vtable (&context, addr, mode);
 	}
 }
 
@@ -32,7 +32,7 @@ static void rtti_msvc_print_all(RVTableContext *context, int mode) {
 	r_cons_break_pop ();
 }
 
-static void rtti_gcc_print_all(RVTableContext *context, int mode) {
+static void rtti_itanium_print_all(RVTableContext *context, int mode) {
 	r_cons_break_push (NULL, NULL);
 	RList *vtables = r_anal_vtable_search (context);
 	RListIter *vtableIter;
@@ -43,7 +43,7 @@ static void rtti_gcc_print_all(RVTableContext *context, int mode) {
 			if (r_cons_is_breaked ()) {
 				break;
 			}
-			r_anal_rtti_gcc_print_at_vtable (context, table->saddr, mode);
+			r_anal_rtti_itanium_print_at_vtable (context, table->saddr, mode);
 			r_cons_print ("\n");
 		}
 	}
@@ -58,6 +58,6 @@ R_API void r_anal_rtti_print_all(RAnal *anal, int mode) {
 	if (context.abi == R_ANAL_CPP_ABI_MSVC) {
 		rtti_msvc_print_all (&context, mode);
 	} else {
-		rtti_gcc_print_all (&context, mode);
+		rtti_itanium_print_all (&context, mode);
 	}
 }
